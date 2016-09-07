@@ -11,6 +11,13 @@
           <input name="prenom" id="prenom" type="text" value="" placeholder="Prénom" class="form-control"/>
           <span class="help-block">{{errorMessage 'prenom'}}</span>
         </div>
+      <label class="control-label" for="url">Coordonées GPS</label>
+        <div class="controls">
+          <input name="x" id="x" type="text" value="" placeholder="Coordonée X" class="form-control"/>
+          <span class="help-block">{{errorMessage 'x'}}</span>
+          <input name="y" id="y" type="text" value="" placeholder="Coordonée Y" class="form-control"/>
+          <span class="help-block">{{errorMessage 'y'}}</span>
+        </div>
       <input type="submit" value="Submit" class="btn btn-primary"/>
     </form>
   </div>
