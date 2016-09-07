@@ -4,6 +4,12 @@ Template.personneItem.helpers({
   },
   prenom: function(){
     return this.prenom;
+  },
+  x: function(){
+    return this.loc[0];
+  },
+  y: function(){
+    return this.loc[1];
   }
 });
 
