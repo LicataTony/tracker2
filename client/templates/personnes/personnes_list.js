@@ -1,4 +1,4 @@
-Template.personnesListe.helpers({
+Template.personnesList.helpers({
   personnes: function(){
     return Personnes.find();
   }

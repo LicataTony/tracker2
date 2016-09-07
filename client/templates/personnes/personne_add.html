@@ -1,0 +1,17 @@
+<template name="personneAdd">
+  <div class="personne-add">
+    <form>
+      <label class="control-label" for="url">Nom</label>
+        <div class="controls">
+          <input name="nom" id="nom" type="text" value="" placeholder="Nom" class="form-control"/>
+          <span class="help-block">{{errorMessage 'nom'}}</span>
+        </div>
+      <label class="control-label" for="url">Prenom</label>
+        <div class="controls">
+          <input name="prenom" id="prenom" type="text" value="" placeholder="Prénom" class="form-control"/>
+          <span class="help-block">{{errorMessage 'prenom'}}</span>
+        </div>
+      <input type="submit" value="Submit" class="btn btn-primary"/>
+    </form>
+  </div>
+</template>
