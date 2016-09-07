@@ -23,11 +23,11 @@ Template.personneAdd.events({
     var prenom = $(e.target).find('[id=prenom]').val();
 
     if((nom!=''&&prenom!='')){
-      Meteor.call('personneAdd', {nom: nom, prenom: prenom}, function(returnBool) {
-        if(returnBool){
+      Meteor.call('personneAdd', {nom: nom, prenom: prenom}, function(e){
+        if(typeof e !== undefined){
           Router.go('personnesList');
         }else{
-          console.log('error');
+          console.log(e);
         }
       });
     }else{
