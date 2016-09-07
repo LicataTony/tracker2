@@ -13,15 +13,16 @@ Template.personneAdd.helpers({
 Template.personneAdd.events({
   'submit form': function(e) {
     e.preventDefault();
-    // ---- get data
+
     var data = getData(e);
-    // --- control data
-    if( data.nom != '' && data.prenom!=''  && data.x!='' && data.y!=''){
-      // send data
+    var personneError = {};
+
+    var ok = controlData(data, personneError);
+    console.log(ok);
+    if(ok){
       personneAdd(data);
     }else{
-      // display errorMessage
-      displayErrorMessage(data);
+      displayErrorMessage(personneError);
     }
   }
 });
@@ -49,6 +50,14 @@ var getData = function(e){
   return {nom: nom, prenom: prenom, x: x, y: y};
 }
 
+var controlData = function(data, personneError){
+  if(data.nom == '')    personneError.nom = 'Veuillez entrer un nom!';
+  if(data.prenom =='')  personneError.prenom = 'Veuillez entrer un prénom!';
+  if(data.x == '')      personneError.x = 'Veuillez entrer une coordonée X valide!';
+  if(data.y == '')      personneError.y = 'Veuillez entrer une coordonée Y valide!';
+  return Object.getOwnPropertyNames(personneError).length === 0;
+}
+
 var personneAdd = function(data){
   Meteor.call('personneAdd', {nom: data.nom, prenom: data.prenom, x: data.x, y: data.y}, function(e){
     if(typeof e !== undefined){
@@ -59,19 +68,6 @@ var personneAdd = function(data){
   });
 }
 
-var displayErrorMessage = function(data){
-  var personneError = {nom: '', prenom: '', x: '', y: ''};
-  if(data.nom==''){
-    personneError.nom = 'Veuillez entrer un nom!';
-  }
-  if(data.prenom==''){
-    personneError.prenom = 'Veuillez entrer un prénom!';
-  }
-  if(data.x==''){
-    personneError.x = 'Veuillez entrer une coordonée X valide!';
-  }
-  if(data.y==''){
-    personneError.y = 'Veuillez entrer une coordonée Y valide!';
-  }
+var displayErrorMessage = function(personneError){
   session.setPersonneError(personneError);
 }
