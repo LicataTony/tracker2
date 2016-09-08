@@ -1,5 +1,4 @@
 <template name="personneItem">
-  {{#if isHidden}}
     <div class="personne-item">
       <p>{{nom}} {{prenom}} [ {{x}} , {{y}} ]
           <input type="checkbox" name="hidden" value="hidden" class="cb hidden2" {{hidden}}/>Cacher
@@ -9,5 +8,4 @@
         {{/if}}
       </p>
     </div>
-  {{/if}}
 </template>
