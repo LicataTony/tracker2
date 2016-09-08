@@ -19,11 +19,11 @@ Template.personneItem.helpers({
     if(this.blocked) return 'checked';
     return '';
   },
-  isAdmin: function(){
-    return (Router.current().route.getName().indexOf('personnesAdmin') !== -1);
+  isNotPublic: function(){
+    return (Router.current().route.getName().indexOf('personnesList') === -1);
   },
   isHidden: function(){
-    var isAdmin = (Router.current().route.getName().indexOf('personnesAdmin') !==-1);
+    var isAdmin = (Router.current().route.getName().indexOf('personnesAdmin') !== -1);
     if(isAdmin) return true;
     if(this.hidden) return false;
     if(this.blocked) return false;
