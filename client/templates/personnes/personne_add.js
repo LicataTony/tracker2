@@ -18,7 +18,6 @@ Template.personneAdd.events({
     var personneError = {};
 
     var ok = controlData(data, personneError);
-    console.log(ok);
     if(ok){
       personneAdd(data);
     }else{
@@ -61,7 +60,11 @@ var controlData = function(data, personneError){
 var personneAdd = function(data){
   Meteor.call('personneAdd', {nom: data.nom, prenom: data.prenom, x: data.x, y: data.y}, function(e){
     if(typeof e !== undefined){
-      Router.go('personnesList');
+      session.clearPersonneError();
+      var isAddingPage = Router.current().route.getName().indexOf('personneAdd') !== -1;
+      if(isAddingPage){
+        Router.go('personnesList');
+      }
     }else{
       console.log(e);
     }
