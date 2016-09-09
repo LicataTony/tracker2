@@ -1,21 +1,5 @@
 Template.personnesMapItem.onRendered(function () {
-  GoogleMaps.load();
-  GoogleMaps.ready('map', function(map) {
-    // Add a marker to the map once it's ready
-    var markers = [];
-    var personnes = Personnes.find();
-    pushExistingPersonnes(map, markers, personnes);
-    Personnes.find().observe({
-      added: function(personne) {
-        // Create a marker for this document
-        pushPersonne(map, markers, personne);
-      },
-      removed: function(oldPersonne) {
-        // Remove the marker from the map
-        deletePersonne(markers, oldPersonne);
-      }
-    });
-  });
+  initMap();
 });
 
 Template.personnesMapItem.helpers({
@@ -31,13 +15,34 @@ Template.personnesMapItem.helpers({
   }
 });
 
-var pushExistingPersonnes = function(map, markers, personnes){
+function initMap() {
+  GoogleMaps.load();
+  var finishInitMap = function(map) {
+    // Add a marker to the map once it's ready
+    var markers = [];
+    var personnes = Personnes.find();
+    loadExistingPersonnes(map, markers, personnes);
+    Personnes.find().observe({
+      added: function(personne) {
+        // Create a marker for this document
+        pushPersonne(map, markers, personne);
+      },
+      removed: function(oldPersonne) {
+        // Remove the marker from the map
+        deletePersonne(markers, oldPersonne);
+      }
+    });
+  }
+  GoogleMaps.ready('map', finishInitMap);
+}
+
+var loadExistingPersonnes = function(map, markers, personnes){
   personnes.forEach(function(personne){
-    pushPersonne(map, markers, personne);
+    pushPersonneOnMap(map, markers, personne);
   });
 }
 
-var pushPersonne = function(map, markers, personne){
+var pushPersonneOnMap = function(map, markers, personne){
   markers.push(new google.maps.Marker({
     position: new google.maps.LatLng(personne.loc[0], personne.loc[1]),
     map: map.instance,
