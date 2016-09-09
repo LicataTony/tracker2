@@ -4,31 +4,15 @@ Template.personnesMapItem.onRendered(function () {
     // Add a marker to the map once it's ready
     var markers = [];
     var personnes = Personnes.find();
-    personnes.forEach(function(personne){
-      markers.push(new google.maps.Marker({
-        position: new google.maps.LatLng(personne.loc[0],personne.loc[1]),
-        map: map.instance,
-        _id: personne._id
-      }));
-    });
+    pushExistingPersonnes(map, markers, personnes);
     Personnes.find().observe({
       added: function(personne) {
         // Create a marker for this document
-        markers.push(new google.maps.Marker({
-          position: new google.maps.LatLng(personne.loc[0], personne.loc[1]),
-          map: map.instance,
-          _id: personne._id
-        }))
+        pushPersonne(map, markers, personne);
       },
       removed: function(oldPersonne) {
         // Remove the marker from the map
-        markers.forEach(function(marker){
-          if(marker._id==oldPersonne._id){
-            marker.setMap(null);
-            // Remove the reference to this marker instance
-            delete marker;
-          }
-        });
+        deletePersonne(markers, oldPersonne);
       }
     });
   });
@@ -47,7 +31,26 @@ Template.personnesMapItem.helpers({
   }
 });
 
-Template.personnesMapItem.onCreated(function(){
-  // We can use the `ready` callback to interact with the map API once the map is ready.
+var pushExistingPersonnes = function(map, markers, personnes){
+  personnes.forEach(function(personne){
+    pushPersonne(map, markers, personne);
+  });
+}
 
-});
+var pushPersonne = function(map, markers, personne){
+  markers.push(new google.maps.Marker({
+    position: new google.maps.LatLng(personne.loc[0], personne.loc[1]),
+    map: map.instance,
+    _id: personne._id
+  }));
+}
+
+var deletePersonne = function(markers, oldPersonne){
+  markers.forEach(function(marker){
+    if(marker._id==oldPersonne._id){
+      marker.setMap(null);
+      // Remove the reference to this marker instance
+      delete marker;
+    }
+  });
+}
