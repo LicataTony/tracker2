@@ -25,6 +25,9 @@ var addMarker = function(map, personne){
     label: personne.nom.charAt(0),
     title: personne.nom+' '+personne.prenom
   });
+  marker.addListener('click', function() {
+    marker.setLabel({color: 'cyan', text: personne.nom.charAt(0)});
+  });
   return marker;
 };
 
