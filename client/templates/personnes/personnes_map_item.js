@@ -41,7 +41,9 @@ var pushPersonne = function(map, markers, personne){
   markers.push(new google.maps.Marker({
     position: new google.maps.LatLng(personne.loc[0], personne.loc[1]),
     map: map.instance,
-    _id: personne._id
+    _id: personne._id,
+    label: personne.nom.charAt(0),
+    title: personne.nom+' '+personne.prenom
   }));
 }
 
