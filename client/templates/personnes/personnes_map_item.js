@@ -1,3 +1,5 @@
+import * as mapCtrl from '/client/lib/map';
+
 Template.personnesMapItem.onRendered(function () {
   initMap();
 });
@@ -5,18 +7,15 @@ Template.personnesMapItem.onRendered(function () {
 Template.personnesMapItem.helpers({
   mapOptions: function() {
     // Make sure the maps API has loaded
-    if (GoogleMaps.loaded()) {
+    if (mapCtrl.loaded()) {
       // Map initialization options
-      return {
-        center: new google.maps.LatLng(46.8080851,7.1622555),
-        zoom: 4
-      };
+      return mapCtrl.fribourg();
     }
   }
 });
 
 function initMap() {
-  GoogleMaps.load();
+  mapCtrl.load();
   var finishInitMap = function(map) {
     // Add a marker to the map once it's ready
     var markers = [];
@@ -25,7 +24,7 @@ function initMap() {
     Personnes.find().observe({
       added: function(personne) {
         // Create a marker for this document
-        pushPersonne(map, markers, personne);
+        pushPersonneOnMap(map, markers, personne);
       },
       removed: function(oldPersonne) {
         // Remove the marker from the map
@@ -33,7 +32,7 @@ function initMap() {
       }
     });
   }
-  GoogleMaps.ready('map', finishInitMap);
+  mapCtrl.ready('map', finishInitMap);
 }
 
 var loadExistingPersonnes = function(map, markers, personnes){
@@ -43,13 +42,8 @@ var loadExistingPersonnes = function(map, markers, personnes){
 }
 
 var pushPersonneOnMap = function(map, markers, personne){
-  markers.push(new google.maps.Marker({
-    position: new google.maps.LatLng(personne.loc[0], personne.loc[1]),
-    map: map.instance,
-    _id: personne._id,
-    label: personne.nom.charAt(0),
-    title: personne.nom+' '+personne.prenom
-  }));
+  var marker = mapCtrl.addMarker(map, personne);
+  markers.push(marker);
 }
 
 var deletePersonne = function(markers, oldPersonne){
