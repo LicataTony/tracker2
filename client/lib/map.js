@@ -1,4 +1,6 @@
 var load = function(){
+  maps = [];
+  markers = [];
   return GoogleMaps.load();
 };
 
@@ -10,6 +12,10 @@ var build = function(lat,lng,zoom){
   formateOptions(lat,lng,zoom);
   return options;
 };
+
+var markers;
+
+var maps;
 
 var options;
 
@@ -24,25 +30,61 @@ var getOptions = function(){
   return options;
 };
 
-var ready = function(action){
-  GoogleMaps.ready('map', action);
+var ready = function(mapKey, action){
+  GoogleMaps.ready(mapKey, action);
 };
 
-var addMarker = function(map, lat , lng , idref , title){
-  var label = "X";
-  var marker = new google.maps.Marker({
-    position: new google.maps.LatLng(lat,lng),
-    map: map.instance,
-    _id: idref,
-    label: label,
-    title: title
+var addMarker = function(mapKey, lat , lng , idref , title){
+  exist = false;
+  markers.forEach(function(marker){
+    if(marker._id == idref) exist = true;
   });
-  return marker;
+  if(!exist){
+    var label = title.charAt(0);
+    var currentMap;
+    maps.forEach(function(map){
+      if(map.key==mapKey){
+        currentMap = map.map;
+      }
+    });
+    var marker = new google.maps.Marker({
+      position: new google.maps.LatLng(lat,lng),
+      map: currentMap.instance,
+      _id: idref,
+      label: label,
+      title: title
+    });
+    markers.push(marker);
+    return marker;
+  }
 };
 
-var addActionOnMarker = function(marker, listener) {
-  marker.addListener('click', listener);
-}
+var addClickListener = function(id, listener) {
+  var choosenMarker;
+  markers.forEach(function(marker){
+    if(marker._id==id) choosenMarker=marker;
+  });
+  if(choosenMarker){
+    choosenMarker.addListener('click', listener);
+  }
+};
+
+var setMap = function(key, map){
+  maps.push({key: key, map: map});
+};
+
+var deleteMarker = function(id){
+  markers.forEach(function(marker){
+    if(marker._id==id){
+      marker.setMap(null);
+      // Remove the reference to this marker instance
+      var index = markers.indexOf(marker);
+      if(index!==-1){
+        markers.splice(index, 1);
+      }
+    }
+  });
+};
 
 module.exports = {
   load: load,
@@ -51,5 +93,7 @@ module.exports = {
   getOptions: getOptions,
   ready: ready,
   addMarker: addMarker,
-  addActionOnMarker: addActionOnMarker
+  addClickListener: addClickListener,
+  setMap: setMap,
+  deleteMarker: deleteMarker
 };

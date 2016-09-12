@@ -1,3 +1,5 @@
+import * as session from '/client/lib/session';
+
 Template.personneItem.helpers({
   nom: function(){
     return this.nom;
@@ -30,9 +32,12 @@ Template.personneItem.helpers({
     return true;
   },
   selected: function(){
-    
-
+    if(session.get(this._id)) return 'background-color: #FFD0A0;';
   }
+});
+
+Template.personneItem.onRendered(function(){
+  session.clear(this._id);
 });
 
 Template.personneItem.events({
