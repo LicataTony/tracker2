@@ -28,6 +28,10 @@ Template.personneItem.helpers({
     if(this.hidden) return false;
     if(this.blocked) return false;
     return true;
+  },
+  selected: function(){
+    
+
   }
 });
 

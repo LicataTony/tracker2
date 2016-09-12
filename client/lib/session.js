@@ -1,17 +1,17 @@
-var clearPersonneError = function(){
-  Session.set('personneError', '');
+var get = function (key) {
+  return Session.get(key);
 };
 
-var setPersonneError = function(personneError){
-  Session.set('personneError', personneError);
+var set = function(key, data){
+  Session.set(key, data);
 };
 
-var getPersonneError = function(){
-  return Session.get('personneError');
+var clear = function(key){
+  Session.set(key, null);
 };
 
 module.exports = {
-  clearPersonneError: clearPersonneError,
-  setPersonneError: setPersonneError,
-  getPersonneError: getPersonneError
+  get: get,
+  set: set,
+  clear: clear
 };

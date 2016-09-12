@@ -6,35 +6,50 @@ var loaded = function(){
   return GoogleMaps.loaded();
 };
 
-var fribourg = function(){
-  return {
-    center: new google.maps.LatLng(46.8080851,7.1622555),
-    zoom: 4
+var build = function(lat,lng,zoom){
+  formateOptions(lat,lng,zoom);
+  return options;
+};
+
+var options;
+
+var formateOptions = function(lat,lng,zoom) {
+  options = {
+    center: new google.maps.LatLng(lat, lng),
+    zoom: zoom
   };
 };
 
-var ready = function(map, mapFunction){
-  GoogleMaps.ready(map, mapFunction);
+var getOptions = function(){
+  return options;
 };
 
-var addMarker = function(map, personne){
+var ready = function(action){
+  GoogleMaps.ready('map', action);
+};
+
+var addMarker = function(map, lat , lng , idref , title){
+  var label = "X";
   var marker = new google.maps.Marker({
-    position: new google.maps.LatLng(personne.loc[0], personne.loc[1]),
+    position: new google.maps.LatLng(lat,lng),
     map: map.instance,
-    _id: personne._id,
-    label: personne.nom.charAt(0),
-    title: personne.nom+' '+personne.prenom
-  });
-  marker.addListener('click', function() {
-    marker.setLabel({color: 'cyan', text: personne.nom.charAt(0)});
+    _id: idref,
+    label: label,
+    title: title
   });
   return marker;
 };
 
+var addActionOnMarker = function(marker, listener) {
+  marker.addListener('click', listener);
+}
+
 module.exports = {
   load: load,
   loaded: loaded,
-  fribourg: fribourg,
+  build: build,
+  getOptions: getOptions,
   ready: ready,
-  addMarker: addMarker
+  addMarker: addMarker,
+  addActionOnMarker: addActionOnMarker
 };

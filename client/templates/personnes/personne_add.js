@@ -1,7 +1,7 @@
 import * as session from '/client/lib/session';
 
 Template.personneAdd.onCreated(function(){
-  session.clearPersonneError();
+  session.clear('personneError');
 });
 
 Template.personneAdd.helpers({
@@ -27,7 +27,7 @@ Template.personneAdd.events({
 });
 
 var printErrorMessage = function(field){
-  var personneError = session.getPersonneError();
+  var personneError = session.get('personneError');
   if(personneError!=null){
     if(personneError[field]!=null){
       return personneError[field];
@@ -60,7 +60,7 @@ var controlData = function(data, personneError){
 var personneAdd = function(data){
   Meteor.call('personneAdd', {nom: data.nom, prenom: data.prenom, x: data.x, y: data.y}, function(e){
     if(typeof e !== undefined){
-      session.clearPersonneError();
+      session.clear('personneError');
       var isAddingPage = Router.current().route.getName().indexOf('personneAdd') !== -1;
       if(isAddingPage){
         Router.go('personnesList');
@@ -72,5 +72,5 @@ var personneAdd = function(data){
 }
 
 var displayErrorMessage = function(personneError){
-  session.setPersonneError(personneError);
+  session.set('personneError', personneError);
 }
