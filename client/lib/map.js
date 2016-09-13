@@ -41,12 +41,7 @@ var addMarker = function(mapKey, lat , lng , idref , title){
   });
   if(!exist){
     var label = title.charAt(0);
-    var currentMap;
-    maps.forEach(function(map){
-      if(map.key==mapKey){
-        currentMap = map.map;
-      }
-    });
+    var currentMap = getMap(mapKey);
     var marker = new google.maps.Marker({
       position: new google.maps.LatLng(lat,lng),
       map: currentMap.instance,
@@ -54,6 +49,7 @@ var addMarker = function(mapKey, lat , lng , idref , title){
       label: label,
       title: title
     });
+     //markers[idref] = marker;
     markers.push(marker);
     return marker;
   }
@@ -86,6 +82,49 @@ var deleteMarker = function(id){
   });
 };
 
+var updateMarker = function(mapKey, lat , lng , idref , title){
+  var label = title.charAt(0);
+  var currentMap = getMap(mapKey);
+  markers.forEach(function(marker){
+    if(marker._id==id){
+      marker.setMap(currentMap);
+      marker.setPosition(new google.maps.LatLng(lat,lng));
+      marker.setTitle(title);
+      marker.setLabel(label);
+    }
+  });
+};
+
+var updateSettingMarker = function(idref, key, value){
+  var markerToUpdate ; // = markers[idref];
+  // console.log(idref);
+  // console.log(markers);
+
+  markers.forEach(function(marker){
+    if(marker._id==idref){
+      markerToUpdate = marker
+      // break;
+    }
+  });
+
+  if (key == 'map')   markerToUpdate.setMap(value);
+  if (key == 'loc')   markerToUpdate.setPosition(new google.maps.LatLng(value[0],value[1]));
+  if (key == 'title') marker.setTitle(title);
+  if (key == 'label') marker.setLabel(label);
+    console.log(markers);
+};
+
+
+var getMap = function(mapKey){
+  var currentMap;
+  maps.forEach(function(map){
+    if(map.key==mapKey){
+      currentMap = map.map;
+    }
+  });
+  return currentMap;
+};
+
 module.exports = {
   load: load,
   loaded: loaded,
@@ -95,5 +134,7 @@ module.exports = {
   addMarker: addMarker,
   addClickListener: addClickListener,
   setMap: setMap,
-  deleteMarker: deleteMarker
+  deleteMarker: deleteMarker,
+  updateMarker: updateMarker,
+  updateSettingMarker: updateSettingMarker
 };

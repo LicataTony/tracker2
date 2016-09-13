@@ -38,12 +38,11 @@ var finishInitMap = function(map) {
     removed: function(oldPersonne) {
       // Remove the marker from the map
       deletePersonneOnMap(oldPersonne);
-      // mapCtrl.removeMarker(oldPersonne._id);
     }
   });
   Personnes.find().observeChanges({
     changed: function(id, fieldsChanged){
-      personnesChanged(id, fieldsChanged, personnes, mapKey);
+      personnesChanged(id, fieldsChanged);
     }
   });
 };
@@ -77,16 +76,9 @@ var deletePersonneOnMap = function(oldPersonne){
   mapCtrl.deleteMarker(oldPersonne._id);
 };
 
-var personnesChanged = function(id, fieldsChanged, personnes){
+var personnesChanged = function(id, fieldsChanged){
   var personneChanged;
-  personnes = Personnes.find();
-  personnes.forEach(function(personne){
-    if(id == personne._id) personneChanged=personne;
-  });
-  if(fieldsChanged.hidden == false || typeof fieldsChanged.hidden == 'undefined'){
-    pushPersonneOnMap(personneChanged);
-  }else{
-    deletePersonneOnMap(personneChanged);
+  if(fieldsChanged.loc) {
+    mapCtrl.updateSettingMarker(id,'loc',fieldsChanged.loc);
   }
-  personnes = Personnes.find({$or: [{hidden: {$exists: false}},{hidden: false}]});
 };

@@ -33,6 +33,9 @@ Template.personneItem.helpers({
   },
   selected: function(){
     if(session.get(this._id)) return 'background-color: #FFD0A0;';
+  },
+  editValue: function(){
+    return Session.get("TargetValue" + this._id);
   }
 });
 
@@ -49,5 +52,32 @@ Template.personneItem.events({
   },
   'change .blocked': function(e){
     Meteor.call('personneBlocked', {id: this._id, hidden: ($(event.target).is(":checked"))});
+  },
+  'dbclick #spanY' : function(e,t){
+    return Session.set("editX",true)
+  },
+  'keypress #editX': function(e, t) {
+    if (evt.which === 13) {
+      var newX = document.getElementById('editX').value;
+      var idPersonne = this._id;
+      if(newX){
+        meteor.call('updateX', parseFloat(newX));
+        return Session.set("editX",false);
+      }
+    }
+  },
+  'dbclick #spanY' : function(e,t){
+    console.log('test');
+    return Session.set("editY",true)
+  },
+  'keypress #editY': function(e, t) {
+    if (evt.which === 13) {
+      var newY = document.getElementById('editY').value;
+      var idPersonne = this._id;
+      if(newY){
+        meteor.call('updateY', parseFloat(newY));
+        return Session.set("editY",false);
+      }
+    }
   }
 });
